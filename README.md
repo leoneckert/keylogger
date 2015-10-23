@@ -46,6 +46,10 @@ $ keylogger ~/logfile.txt
 Logging to: /Users/Casey/logfile.txt
 ```
 
+## Timestamps
+
+Output is formatted as [seconds],[nanoseconds],[key] i.e. "1445569623,952880000,[cmd]"
+
 ## Contributing
 
 Feel free to fork the project and submit a pull request with your changes!
