@@ -55,7 +55,17 @@ Output is formatted as [seconds],[nanoseconds],[key] i.e. "1445569623,952880000,
 Two changes have been made here. One is, I commented out specific keys because they are not on common keyboards. Generally the logger should log out for as many as possible keys to adapt to different keyboards. For my project however I am ultimately turning the data into a graphic and the empty slots of keys that are never pressed are not needed in there. 
 Secondly, some keys were always written twice to the log file. 
 The following keys:
-keyCode: Key: [alt]
+
+keyCode 54: Key: "[cmd]"
+keyCode 55: Key: "[cmd]";
+keyCode 56: Key: "[shift]"
+keyCode 60: Key: "[shift]"
+keyCode 58: Key: "[alt]"
+keyCode 61: Key: "[alt]"
+keyCode 59: Key: "[ctrl]"
+
+
+
 
 to change that I added some variables. I added a boolean printIt and called the convertKeyCode function outside of the actual print method. Like this:
 ```bash

