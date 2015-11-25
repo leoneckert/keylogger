@@ -96,7 +96,7 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef e
     // NEXT LINE CODED BY LEON TO PRINT SPECIFIC KEYS ONLY ONCE
     const char *convertedKey = convertKeyCode(keyCode);
     if(printIt){
-        fprintf(logfile, "%lu,%lu,%s,%hu,%d,%i\n",ts.tv_sec,ts.tv_nsec,convertedKey,keyCode,critKey,lastKeyCode);
+        fprintf(logfile, "%lu,%lu,%s\n",ts.tv_sec,ts.tv_nsec,convertedKey);
     
         fflush(logfile);
     }   
@@ -115,8 +115,6 @@ const char *convertKeyCode(int keyCode) {
         return "[no print]";
     }else{
         printIt = true;
-        lastKeyCode = -2;
-        critKey = false;
         switch ((int) keyCode) {
             case 0:   return "a";
             case 1:   return "s";
