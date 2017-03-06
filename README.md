@@ -69,19 +69,6 @@ $ tail -f /var/log/keystroke.log
 ```
 and see if it's still logging.
 
-### Optional Parameters
-
-You can pass in two optional parameters to the program. The `clear` option will clear the logs at the default location. Any other argument passed in will be used as the path to the log file for that process. See below:
-
-```bash
-# Clear the logfile.
-$ keylogger clear
-Logfile cleared.
-
-# Specify a logfile location.
-$ keylogger ~/logfile.txt
-Logging to: /Users/Casey/logfile.txt
-```
 
 ## Timestamps
 
