@@ -1,6 +1,15 @@
 # Mac OS X Keylogger
 
-This repository holds the code for a simple and easy to use keylogger for Mac OS X. It is not meant to be malicious, and is written as a proof of concept. There is not a lot of information on keyloggers or implementing them on Mac OS X, and most of the ones I've seen do not work as indicated. This project aims to be a simple implementation on how it can be accomplished on OS X.
+This keylogger is a research tool for my thesis about keystroke biometrics. It's not meant to be malicious. It logs keyUp, keyDown and flagCHANGE events paired with a second (since 1970) and a nanosecond timestamp - I don't know why I didnt combine the two (simply concatenatinf the to gives you nanoseconds since 1970), but you can easily do that when processing the data.
+
+Output looks like this:
+```bash
+1488838235,789626000,25,keyUP
+1488838235,957501000,49,keyDOWN
+1488838236,53511000,49,keyUP
+1488838236,301612000,55,flagCHANGE
+1488838236,397406000,9,keyDOWN
+``` 
 
 
 ## Usage
@@ -12,11 +21,22 @@ $ git clone https://github.com/leoneckert/keylogger && cd keylogger
 $ make && make install
 ```
 
+The keylogger should now be running, check with:
+
+```bash
+$ tail -f /var/log/keystroke.log
+```
+
 The application by default logs to `/var/log/keystroke.log`, which may require root access depending on your system's permissions. You can change this in [`keylogger.h`](https://github.com/leoneckert/keylogger/blob/master/keylogger.h#L12) if necessary.
+
+If it is not running yet try to simply type
 
 ```bash
 $ keylogger
-Logging to: /var/log/keystroke.log
+```
+or
+```bash
+$ keylogger &
 ```
 
 If you'd like the application to run on startup, run the `startup` make target:
@@ -32,6 +52,22 @@ You can completely remove the application from your system (including the startu
 ```bash
 $ sudo make uninstall
 ```
+
+Additonal, I'd run:
+
+```bash
+$ ps aux | grep keylogger
+```
+which should give you the process id, and then run
+```bash
+$ sudo kill -9 [process id]
+```
+to kill the process. 
+To Check if the logger is still running or actually quit, run:
+```bash
+$ tail -f /var/log/keystroke.log
+```
+and see if it's still logging.
 
 ### Optional Parameters
 
@@ -50,44 +86,6 @@ Logging to: /Users/Casey/logfile.txt
 ## Timestamps
 
 Output is formatted as [seconds],[nanoseconds],[key] i.e. "1445569623,952880000,[cmd]"
-
-## Modification for Macbook Keyboard and fix repetition
-
-Two changes have been made here. One is, I commented out specific keys because they are not on common keyboards. Generally the logger should log out for as many as possible keys to adapt to different keyboards. For my project however I am ultimately turning the data into a graphic and the empty slots of keys that are never pressed are not needed in there. 
-Secondly, some keys were always written twice to the log file. 
-The following keys:
-
-keyCode 54: Key: "[cmd]"
-keyCode 55: Key: "[cmd]";
-keyCode 56: Key: "[shift]"
-keyCode 60: Key: "[shift]"
-keyCode 58: Key: "[alt]"
-keyCode 61: Key: "[alt]"
-keyCode 59: Key: "[ctrl]"
-
-
-
-
-to change that I added some variables. I added a boolean printIt and called the convertKeyCode function outside of the actual print method. Like this:
-```bash
-const char *convertedKey = convertKeyCode(keyCode);
-if(printIt){
-    fprintf(logfile, "%lu,%lu,%s\n",ts.tv_sec,ts.tv_nsec,convertedKey);
-    fflush(logfile);
-} 
-```
-`printIt` is true by default, so normally things get printed / logged. However whenever a "critical key" (thos that were printed twice) is pressed the following happens:
-```bash
-case 61: 
-    critKey = true; //all these lines are to prevent this key from being printed twice
-    lastKeyCode = (int) keyCode; 
-    return "[alt]"; 
-```
-we set `critKey` to true, signifying "watch out, the last key was one of those that for some reason triggers the keystroke event twice" and then we know that the next time, the keystroke is both Triggered AND the key pressed is the same as that critical keystroke, we dont want to print it. The problem was for it to be triggered once on keydown and once on keyup. `shift + K` for example would print [shift], k, [shift]. with my solution it just prints [shift], k.
-
-Ill put some more thought into this explanation soon, I am aware its not quite clear and a bit messy. For me, fixing it was important because the project I am working on requires it.
-
-
 
 ## Contributing
 

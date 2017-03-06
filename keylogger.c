@@ -49,8 +49,8 @@ int main(int argc, const char *argv[]) {
     fflush(logfile);
 
     // Display the location of the logfile and start the loop.
-    printf("Logging to: %s\n", logfileLocation);
-    fflush(stdout);
+    /* printf("Logging to: %s\n", logfileLocation); */
+    /* fflush(stdout); */
 
     CFRunLoopRun();
 
