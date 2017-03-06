@@ -14,6 +14,8 @@ Output looks like this:
 
 ## Usage
 
+Assuming you know me (Leon) and I asked you to volunteer for my research, let me talk you through this installation process because I did it a million times. Otherwise, I assume you know what you are doing and what all this means; if not, be careful :)
+
 Start by cloning the repository and running the proper make commands, shown below. By default, the application installs to `/usr/local/bin/keylogger`, which can easily be changed in the [`Makefile`](https://github.com/leoneckert/keylogger/blob/master/Makefile). `make install` may require root access.
 
 ```bash
