@@ -21,7 +21,7 @@ $ git clone https://github.com/leoneckert/keylogger && cd keylogger
 $ make && make install
 ```
 
-The keylogger should now be running, check with:
+Check if the application is running already with:
 
 ```bash
 $ tail -f /var/log/keystroke.log
@@ -34,7 +34,7 @@ If it is not running yet try to simply type
 ```bash
 $ keylogger
 ```
-or
+or (to run it in the background)
 ```bash
 $ keylogger &
 ```
