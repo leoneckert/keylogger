@@ -37,16 +37,16 @@ int main(int argc, const char *argv[]) {
 
     // Get the current time and open the logfile.
     time_t result = time(NULL);
-    logfile = fopen(logfileLocation, "a");
-    
-    if (!logfile) {
-        fprintf(stderr, "ERROR: Unable to open log file. Ensure that you have the proper permissions.\n");
-        exit(1);
-    }
+    /* logfile = fopen(logfileLocation, "a"); */
+    /*  */
+    /* if (!logfile) { */
+    /*     fprintf(stderr, "ERROR: Unable to open log file. Ensure that you have the proper permissions.\n"); */
+    /*     exit(1); */
+    /* } */
 
     // Output to logfile.
-    fprintf(logfile, "\n\nKeylogging has begun.\n%s\n", asctime(localtime(&result)));
-    fflush(logfile);
+    /* fprintf(logfile, "\n\nKeylogging has begun.\n%s\n", asctime(localtime(&result))); */
+    /* fflush(logfile); */
 
     // Display the location of the logfile and start the loop.
     /* printf("Logging to: %s\n", logfileLocation); */
@@ -78,19 +78,21 @@ CGEventRef CGEventCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef e
     current_utc_time(&ts);
 
     if (type == kCGEventKeyUp) {
-        fprintf(logfile, "%lu,%lu,%i,keyUP\n", ts.tv_sec, ts.tv_nsec, keyCode);
-        fflush(logfile);
+        /* fprintf(logfile, "%lu,%lu,%i,keyUP\n", ts.tv_sec, ts.tv_nsec, keyCode); */
+        /* fflush(logfile); */
+        printf("%lu,%lu,%i,keyUP\n", ts.tv_sec, ts.tv_nsec, keyCode);
+        fflush(stdout);
     }
 
-    if (type == kCGEventKeyDown) {
-        fprintf(logfile, "%lu,%lu,%i,keyDOWN\n", ts.tv_sec, ts.tv_nsec, keyCode);
-        fflush(logfile);
-    }
-
-    if (type == kCGEventFlagsChanged) {
-        fprintf(logfile, "%lu,%lu,%i,flagCHANGE\n", ts.tv_sec, ts.tv_nsec, keyCode);
-        fflush(logfile);
-    }
+    /* if (type == kCGEventKeyDown) { */
+    /*     fprintf(logfile, "%lu,%lu,%i,keyDOWN\n", ts.tv_sec, ts.tv_nsec, keyCode); */
+    /*     fflush(logfile); */
+    /* } */
+    /*  */
+    /* if (type == kCGEventFlagsChanged) { */
+    /*     fprintf(logfile, "%lu,%lu,%i,flagCHANGE\n", ts.tv_sec, ts.tv_nsec, keyCode); */
+    /*     fflush(logfile); */
+    /* } */
 
     return event;
 }
